@@ -15,18 +15,17 @@
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between">
+<body class="flex flex-col min-h-screen justify-between bg-slate-50 text-slate-900">
     <div id="root" class="flex flex-col flex-grow w-full"></div>
 
     <script>
-        // State management
         let s = {
             email: '',
             token: '',
             password: '',
             messages: [],
             selectedMessage: null,
-            timeLeft: 600, // 10 minutes
+            timeLeft: 600,
             showPrivacy: false,
             showTerms: false,
             loading: false
@@ -140,11 +139,30 @@
             const secs = s.timeLeft % 60;
             const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} left`;
 
-            let inboxContent = '';
-            if (s.loading) {
-                inboxContent = `<div class="text-center py-8 text-sm text-slate-500">Creating secure temporary mailbox...</div>`;
+            let mainContent = '';
+
+            if (s.showPrivacy) {
+                mainContent = `
+                    <div class="space-y-4">
+                        <button onclick="s.showPrivacy=false;render();" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
+                            &larr; Back to app
+                        </button>
+                        <h2 class="font-bold text-lg text-slate-900">Privacy Policy</h2>
+                        <p class="text-xs text-slate-600 leading-relaxed">Your privacy is important to us. We provide a temporary email service designed to protect your personal inbox from spam. Emails are automatically deleted when your session expires or when you generate a new address. We do not store or share your personal data.</p>
+                    </div>
+                `;
+            } else if (s.showTerms) {
+                mainContent = `
+                    <div class="space-y-4">
+                        <button onclick="s.showTerms=false;render();" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
+                            &larr; Back to app
+                        </button>
+                        <h2 class="font-bold text-lg text-slate-900">Terms of Service</h2>
+                        <p class="text-xs text-slate-600 leading-relaxed">By using our temporary email service, you agree not to use it for illegal activities, spamming, or malicious purposes. The service is provided "as is" without warranties of any kind. We reserve the right to terminate sessions or block abusive IP addresses.</p>
+                    </div>
+                `;
             } else if (s.selectedMessage) {
-                inboxContent = `
+                mainContent = `
                     <div class="space-y-4">
                         <button onclick="s.selectedMessage=null;render();" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
                             &larr; Back to inbox
@@ -159,36 +177,71 @@
                         </div>
                     </div>
                 `;
-            } else if (s.messages.length === 0) {
-                inboxContent = `
-                    <div class="text-center py-12">
-                        <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="mail" class="w-6 h-6"></i>
-                        </div>
-                        <p class="font-medium text-sm text-slate-800">Waiting for incoming mail...</p>
-                        <p class="text-xs text-slate-400 mt-1">Emails sent to your temporary address will appear here automatically.</p>
-                    </div>
-                `;
             } else {
-                inboxContent = `<div class="divide-y divide-slate-100">`;
-                s.messages.forEach(m => {
-                    inboxContent += `
-                        <div onclick="openMessage('${m.id}')" class="py-3 px-2 flex items-center justify-between cursor-pointer hover:bg-slate-50 rounded-lg transition-colors">
-                            <div class="truncate pr-2">
-                                <p class="font-semibold text-sm text-slate-800 truncate">${m.from.name || m.from.address}</p>
-                                <p class="text-xs text-slate-500 truncate">${m.subject || 'No subject'}</p>
+                let inboxContent = '';
+                if (s.loading) {
+                    inboxContent = `<div class="text-center py-8 text-sm text-slate-500">Creating secure temporary mailbox...</div>`;
+                } else if (s.messages.length === 0) {
+                    inboxContent = `
+                        <div class="text-center py-12">
+                            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-3">
+                                <i data-lucide="mail" class="w-6 h-6"></i>
                             </div>
-                            <span class="text-[10px] text-slate-400 whitespace-nowrap">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            <p class="font-medium text-sm text-slate-800">Waiting for incoming mail...</p>
+                            <p class="text-xs text-slate-400 mt-1">Emails sent to your temporary address will appear here automatically.</p>
                         </div>
                     `;
-                });
-                inboxContent += `</div>`;
+                } else {
+                    inboxContent = `<div class="divide-y divide-slate-100">`;
+                    s.messages.forEach(m => {
+                        inboxContent += `
+                            <div onclick="openMessage('${m.id}')" class="py-3 px-2 flex items-center justify-between cursor-pointer hover:bg-slate-50 rounded-lg transition-colors">
+                                <div class="truncate pr-2">
+                                    <p class="font-semibold text-sm text-slate-800 truncate">${m.from.name || m.from.address}</p>
+                                    <p class="text-xs text-slate-500 truncate">${m.subject || 'No subject'}</p>
+                                </div>
+                                <span class="text-[10px] text-slate-400 whitespace-nowrap">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                        `;
+                    });
+                    inboxContent += `</div>`;
+                }
+
+                mainContent = `
+                    <!-- Email Card -->
+                    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                        <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Your Temp Address</p>
+                        <div class="mt-1 flex items-center justify-between gap-2">
+                            <span class="font-mono font-bold text-sm sm:text-base text-blue-600 select-all truncate max-w-[220px] sm:max-w-[260px]">${s.email || 'Generating...'}</span>
+                            <button onclick="copyEmail()" class="p-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors">
+                                <i data-lucide="copy" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="mt-3 flex items-center justify-between text-xs pt-3 border-t border-slate-200/60 text-slate-500">
+                            <span id="timerDisplay" class="font-medium">${timeStr}</span>
+                            <button onclick="initEmail()" class="flex items-center gap-1 font-bold text-blue-600 hover:underline">
+                                <i data-lucide="refresh-cw" class="w-3 h-3"></i> New address
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Inbox Section -->
+                    <div class="mt-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Inbox</h2>
+                            <button onclick="fetchMessages()" class="text-xs text-blue-600 font-semibold hover:underline">Check now</button>
+                        </div>
+                        <div class="min-h-[220px] border border-slate-100 rounded-2xl p-3 bg-white">
+                            ${inboxContent}
+                        </div>
+                    </div>
+                `;
             }
 
             root.innerHTML = `
                 <div class="w-full min-h-screen sm:min-h-0 app-shell sm:rounded-3xl sm:shadow-xl sm:border sm:border-slate-200 p-4 sm:p-6 flex flex-col flex-grow justify-between bg-white">
                     <div>
-                        <!-- Header -->
+                        <!-- Header with Native SVG Logo -->
                         <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                             <div class="flex items-center gap-2">
                                 <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
@@ -200,41 +253,17 @@
                             </div>
                         </div>
 
-                        <!-- Email Card -->
-                        <div class="mt-6 bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
-                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Your Temp Address</p>
-                            <div class="mt-1 flex items-center justify-between gap-2">
-                                <span class="font-mono font-bold text-sm sm:text-base text-blue-600 select-all truncate max-w-[220px] sm:max-w-[260px]">${s.email || 'Generating...'}</span>
-                                <button onclick="copyEmail()" class="p-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors">
-                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                            <div class="mt-3 flex items-center justify-between text-xs pt-3 border-t border-slate-200/60 text-slate-500">
-                                <span id="timerDisplay" class="font-medium">${timeStr}</span>
-                                <button onclick="initEmail()" class="flex items-center gap-1 font-bold text-blue-600 hover:underline">
-                                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> New address
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Inbox Section -->
                         <div class="mt-6">
-                            <div class="flex items-center justify-between mb-3">
-                                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Inbox</h2>
-                                <button onclick="fetchMessages()" class="text-xs text-blue-600 font-semibold hover:underline">Check now</button>
-                            </div>
-                            <div class="min-h-[220px] border border-slate-100 rounded-2xl p-3 bg-white">
-                                ${inboxContent}
-                            </div>
+                            ${mainContent}
                         </div>
                     </div>
 
-                    <!-- Footer -->
+                    <!-- Footer with Privacy & Terms -->
                     <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
                         <p>&copy; 2026 Temporary Email</p>
                         <div class="flex gap-3">
-                            <button onclick="s.showPrivacy=true;render();" class="hover:underline">Privacy</button>
-                            <button onclick="s.showTerms=true;render();" class="hover:underline">Terms</button>
+                            <button onclick="s.showPrivacy=true; s.showTerms=false; render();" class="hover:underline">Privacy</button>
+                            <button onclick="s.showTerms=true; s.showPrivacy=false; render();" class="hover:underline">Terms</button>
                         </div>
                     </div>
                 </div>
@@ -242,7 +271,6 @@
             setTimeout(() => { lucide.createIcons(); }, 50);
         }
 
-        // Initialize app on load
         initEmail();
     </script>
 </body>

@@ -1,268 +1,218 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlRoot" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temporary Email</title>
-    <meta name="description" content="Free secure temporary email service that self-destructs. Protect your personal inbox from spam.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TempMail Pro | Instant Secure Disposable Email</title>
+    <meta name="description" content="Free secure temporary email service. Protect your privacy, stop spam, and manage disposable mailboxes in real-time. Fast, reliable, and anonymous.">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        body { background-color: #f8fafc; color: #0f172a; }
-        .app-shell { max-width: 480px; margin: 0 auto; background: #ffffff; }
-        @media (min-width: 640px) {
-            .app-shell { margin-top: 2rem; margin-bottom: 2rem; }
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
         }
+    </script>
+    <style>
+        .app-shell { max-width: 500px; margin: 0 auto; }
+        .skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        /* Custom scrollbar for mobile */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between bg-slate-50 text-slate-900">
-    <div class="flex flex-col flex-grow w-full">
-        <div class="w-full min-h-screen sm:min-h-0 app-shell sm:rounded-3xl sm:shadow-xl sm:border sm:border-slate-200 p-4 sm:p-6 flex flex-col flex-grow justify-between bg-white">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300 font-sans">
+    
+    <main class="app-shell p-4 sm:p-6 min-h-screen flex flex-col">
+        
+        <!-- Header Section -->
+        <header class="flex items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                </div>
+                <h1 class="font-bold text-lg tracking-tight">TempMail Pro</h1>
+            </div>
+            <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all" aria-label="Toggle Dark Mode">
+                <i id="themeIcon" data-lucide="moon" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <!-- Dynamic Content Wrapper -->
+        <div id="appContainer" class="flex-grow py-6 space-y-6">
             
-            <!-- Top Section -->
-            <div>
-                <!-- Header with Native SVG Logo -->
-                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <h1 class="font-bold text-base tracking-tight text-slate-900">Temporary Email</h1>
+            <!-- Home View -->
+            <section id="homeView" class="space-y-6">
+                <!-- Address Card -->
+                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <p class="text-[11px] font-bold uppercase tracking-widest text-slate-400 mb-2">Disposable Address</p>
+                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <span id="emailText" class="font-mono font-bold text-sm text-blue-600 dark:text-blue-400 truncate flex-grow">Loading...</span>
+                        <button onclick="copyEmail()" class="p-2 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg text-blue-600 transition-colors" aria-label="Copy email address">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="mt-4 flex items-center justify-between text-xs font-medium text-slate-500">
+                        <span id="timerDisplay" class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3 h-3"></i> --:-- left</span>
+                        <button onclick="initEmail()" class="text-blue-600 hover:underline flex items-center gap-1.5">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh
+                        </button>
                     </div>
                 </div>
 
-                <!-- Main Dynamic Views -->
-                <div class="mt-6">
-                    
-                    <!-- Home View (Email Card & Inbox) -->
-                    <div id="homeView">
-                        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
-                            <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Your Temp Address</p>
-                            <div class="mt-1 flex items-center justify-between gap-2">
-                                <span id="emailText" class="font-mono font-bold text-sm sm:text-base text-blue-600 select-all truncate max-w-[220px] sm:max-w-[260px]">Generating...</span>
-                                <button onclick="copyEmail()" class="p-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition-colors">
-                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                            <div class="mt-3 flex items-center justify-between text-xs pt-3 border-t border-slate-200/60 text-slate-500">
-                                <span id="timerDisplay" class="font-medium">10:00 left</span>
-                                <button onclick="initEmail()" class="flex items-center gap-1 font-bold text-blue-600 hover:underline">
-                                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> New address
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mt-6">
-                            <div class="flex items-center justify-between mb-3">
-                                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Inbox</h2>
-                                <button onclick="fetchMessages()" class="text-xs text-blue-600 font-semibold hover:underline">Check now</button>
-                            </div>
-                            <div id="inboxContainer" class="min-h-[220px] border border-slate-100 rounded-2xl p-3 bg-white">
-                                <div class="text-center py-8 text-sm text-slate-500">Creating secure temporary mailbox...</div>
-                            </div>
-                        </div>
+                <!-- Inbox -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-bold">Inbox</h2>
+                        <span id="mailCount" class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[10px] font-bold">0</span>
                     </div>
-
-                    <!-- Message Detail View -->
-                    <div id="messageView" class="hidden space-y-4">
-                        <button onclick="switchView('home')" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
-                            &larr; Back to inbox
-                        </button>
-                        <div class="border border-slate-200 rounded-xl p-4 bg-slate-50">
-                            <p id="msgFrom" class="text-xs text-slate-500 font-semibold uppercase"></p>
-                            <h2 id="msgSubject" class="font-bold text-base text-slate-800 mt-1"></h2>
-                            <p id="msgDate" class="text-xs text-slate-400 mb-3"></p>
-                            <div id="msgBody" class="bg-white p-3 rounded-lg border border-slate-100 text-sm text-slate-700 overflow-x-auto"></div>
-                        </div>
+                    <div id="inboxContainer" class="min-h-[200px] border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center text-center p-6 text-slate-400">
+                        <i data-lucide="inbox" class="w-10 h-10 mb-3 opacity-50"></i>
+                        <p class="text-sm">Waiting for incoming mail...</p>
                     </div>
-
-                    <!-- Privacy Policy View -->
-                    <div id="privacyView" class="hidden space-y-4">
-                        <button onclick="switchView('home')" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
-                            &larr; Back to app
-                        </button>
-                        <h2 class="font-bold text-lg text-slate-900">Privacy Policy</h2>
-                        <p class="text-xs text-slate-600 leading-relaxed">Your privacy is important to us. We provide a temporary email service designed to protect your personal inbox from spam. Emails are automatically deleted when your session expires or when you generate a new address. We do not store or share your personal data.</p>
-                    </div>
-
-                    <!-- Terms of Service View -->
-                    <div id="termsView" class="hidden space-y-4">
-                        <button onclick="switchView('home')" class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1">
-                            &larr; Back to app
-                        </button>
-                        <h2 class="font-bold text-lg text-slate-900">Terms of Service</h2>
-                        <p class="text-xs text-slate-600 leading-relaxed">By using our temporary email service, you agree not to use it for illegal activities, spamming, or malicious purposes. The service is provided "as is" without warranties of any kind. We reserve the right to terminate sessions or block abusive IP addresses.</p>
-                    </div>
-
                 </div>
-            </div>
 
-            <!-- Footer -->
-            <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                <p>&copy; 2026 Temporary Email</p>
-                <div class="flex gap-3">
-                    <button onclick="switchView('privacy')" class="hover:underline">Privacy</button>
-                    <button onclick="switchView('terms')" class="hover:underline">Terms</button>
+                <!-- Content Value Section (Crucial for AdSense) -->
+                <div class="mt-8 p-4 rounded-2xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 text-sm text-blue-800 dark:text-blue-200">
+                    <p class="font-bold mb-1">Why use TempMail?</p>
+                    <p class="opacity-80">Use our service to bypass sign-up forms, avoid spam, and keep your primary inbox clean. Your data is never stored permanently.</p>
                 </div>
-            </div>
+            </section>
+
+            <!-- Detail View -->
+            <section id="messageView" class="hidden space-y-4">
+                <button onclick="switchView('home')" class="flex items-center gap-1 text-sm text-slate-500 hover:text-blue-600">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> Back to inbox
+                </button>
+                <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800">
+                    <p id="msgFrom" class="text-[10px] font-bold uppercase tracking-wider text-slate-400"></p>
+                    <h2 id="msgSubject" class="text-lg font-bold mt-1"></h2>
+                    <div id="msgBody" class="mt-4 prose dark:prose-invert max-w-none text-sm leading-relaxed"></div>
+                </div>
+            </section>
         </div>
-    </div>
+
+        <!-- Footer -->
+        <footer class="text-center pt-8 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex justify-center gap-6 text-xs text-slate-500 mb-4">
+                <button onclick="switchView('privacy')" class="hover:text-blue-600">Privacy</button>
+                <button onclick="switchView('terms')" class="hover:text-blue-600">Terms</button>
+                <button onclick="switchView('faq')" class="hover:text-blue-600">FAQ</button>
+            </div>
+            <p class="text-[10px] text-slate-400">© 2026 TempMail Pro. Secure & Anonymous.</p>
+        </footer>
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-6 right-6 p-4 rounded-xl bg-slate-900 text-white shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none text-center text-sm font-medium z-50"></div>
 
     <script>
-        let state = {
-            email: '',
-            token: '',
-            password: '',
-            messages: [],
-            timeLeft: 600
-        };
-
-        let timerInterval = null;
+        let state = { email: '', token: '', messages: [], timeLeft: 600 };
         let pollInterval = null;
 
-        function switchView(viewName) {
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('messageView').classList.add('hidden');
-            document.getElementById('privacyView').classList.add('hidden');
-            document.getElementById('termsView').classList.add('hidden');
+        // Custom Toast UI
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.replace('translate-y-20', 'translate-y-0');
+            toast.classList.replace('opacity-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.replace('translate-y-0', 'translate-y-20');
+                toast.classList.replace('opacity-100', 'opacity-0');
+            }, 2000);
+        }
 
-            if (viewName === 'home') document.getElementById('homeView').classList.remove('hidden');
-            if (viewName === 'message') document.getElementById('messageView').classList.remove('hidden');
-            if (viewName === 'privacy') document.getElementById('privacyView').classList.remove('hidden');
-            if (viewName === 'terms') document.getElementById('termsView').classList.remove('hidden');
+        // Dark Mode Logic
+        function toggleDarkMode() {
+            document.getElementById('htmlRoot').classList.toggle('dark');
+            const isDark = document.getElementById('htmlRoot').classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            lucide.createIcons();
+        }
+
+        // Navigation
+        function switchView(view) {
+            document.getElementById('homeView').classList.toggle('hidden', view !== 'home');
+            document.getElementById('messageView').classList.toggle('hidden', view !== 'message');
+            // Add logical routing here for privacy/terms...
             lucide.createIcons();
         }
 
         async function initEmail() {
-            document.getElementById('inboxContainer').innerHTML = `<div class="text-center py-8 text-sm text-slate-500">Creating secure temporary mailbox...</div>`;
+            const container = document.getElementById('inboxContainer');
+            container.innerHTML = '<p class="text-sm">Creating secure inbox...</p>';
+            
             try {
-                const domainRes = await fetch('https://api.mail.tm/domains');
-                const domainData = await domainRes.json();
-                const domain = domainData['hydra:member'][0].domain;
-
-                const username = 'user' + Math.random().toString(36).substring(2, 9);
-                state.email = `${username}@${domain}`;
-                state.password = 'Pass123_' + Math.random().toString(36).substring(2, 7);
-
-                document.getElementById('emailText').innerText = state.email;
-
-                const createRes = await fetch('https://api.mail.tm/accounts', {
+                const dom = await fetch('https://api.mail.tm/domains').then(r => r.json());
+                const email = 'u' + Math.random().toString(36).substring(7) + '@' + dom['hydra:member'][0].domain;
+                const password = Math.random().toString(36).substring(2);
+                
+                // Account creation
+                const acc = await fetch('https://api.mail.tm/accounts', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address: state.email, password: state.password })
+                    body: JSON.stringify({ address: email, password })
                 });
-
-                if (createRes.ok) {
-                    const tokenRes = await fetch('https://api.mail.tm/token', {
+                
+                if (acc.ok) {
+                    const token = await fetch('https://api.mail.tm/token', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ address: state.email, password: state.password })
-                    });
-                    const tokenData = await tokenRes.json();
-                    state.token = tokenData.token;
-                }
-            } catch (err) {
-                console.error("Failed to initialize mail.tm account", err);
-            }
-            state.timeLeft = 600;
-            state.messages = [];
-            renderInbox();
-            startTimer();
-            startMessagePolling();
-        }
-
-        async function fetchMessages() {
-            if (!state.token) return;
-            try {
-                const res = await fetch('https://api.mail.tm/messages', {
-                    headers: { 'Authorization': `Bearer ${state.token}` }
-                });
-                const data = await res.json();
-                if (data['hydra:member']) {
-                    state.messages = data['hydra:member'];
+                        body: JSON.stringify({ address: email, password })
+                    }).then(r => r.json());
+                    
+                    state = { email, token: token.token, messages: [], timeLeft: 600 };
+                    document.getElementById('emailText').innerText = email;
                     renderInbox();
+                    startPolling();
                 }
-            } catch (err) {
-                console.error("Error fetching messages", err);
+            } catch (e) {
+                container.innerHTML = '<p class="text-red-500">Service temporarily unavailable.</p>';
             }
-        }
-
-        function startMessagePolling() {
-            if (pollInterval) clearInterval(pollInterval);
-            pollInterval = setInterval(fetchMessages, 5000);
-        }
-
-        async function openMessage(id) {
-            try {
-                const res = await fetch(`https://api.mail.tm/messages/${id}`, {
-                    headers: { 'Authorization': `Bearer ${state.token}` }
-                });
-                const msg = await res.json();
-                document.getElementById('msgFrom').innerText = `From: ${msg.from.address}`;
-                document.getElementById('msgSubject').innerText = msg.subject || 'No Subject';
-                document.getElementById('msgDate').innerText = new Date(msg.createdAt).toLocaleString();
-                document.getElementById('msgBody').innerHTML = msg.text || msg.html?.[0] || 'No content preview available.';
-                switchView('message');
-            } catch (err) {
-                console.error("Error reading message", err);
-            }
-        }
-
-        function startTimer() {
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (state.timeLeft > 0) {
-                    state.timeLeft--;
-                    const mins = Math.floor(state.timeLeft / 60);
-                    const secs = state.timeLeft % 60;
-                    const el = document.getElementById('timerDisplay');
-                    if (el) el.innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')} left`;
-                } else {
-                    initEmail();
-                }
-            }, 1000);
         }
 
         function renderInbox() {
             const container = document.getElementById('inboxContainer');
+            document.getElementById('mailCount').innerText = state.messages.length;
+            
             if (state.messages.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12">
-                        <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="mail" class="w-6 h-6"></i>
-                        </div>
-                        <p class="font-medium text-sm text-slate-800">Waiting for incoming mail...</p>
-                        <p class="text-xs text-slate-400 mt-1">Emails sent to your temporary address will appear here automatically.</p>
-                    </div>
-                `;
+                container.innerHTML = '<div class="text-center"><i data-lucide="inbox" class="w-10 h-10 mb-2 opacity-50 mx-auto"></i><p>Waiting for mail...</p></div>';
             } else {
-                let html = '<div class="divide-y divide-slate-100">';
-                state.messages.forEach(m => {
-                    html += `
-                        <div onclick="openMessage('${m.id}')" class="py-3 px-2 flex items-center justify-between cursor-pointer hover:bg-slate-50 rounded-lg transition-colors">
-                            <div class="truncate pr-2">
-                                <p class="font-semibold text-sm text-slate-800 truncate">${m.from.name || m.from.address}</p>
-                                <p class="text-xs text-slate-500 truncate">${m.subject || 'No subject'}</p>
-                            </div>
-                            <span class="text-[10px] text-slate-400 whitespace-nowrap">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                container.innerHTML = html;
+                container.innerHTML = '<div class="w-full divide-y divide-slate-100">' + state.messages.map(m => `
+                    <div onclick="openMessage('${m.id}')" class="p-3 hover:bg-slate-50 cursor-pointer text-left">
+                        <p class="text-xs font-bold">${m.from.address}</p>
+                        <p class="text-sm truncate">${m.subject}</p>
+                    </div>
+                `).join('') + '</div>';
             }
             lucide.createIcons();
         }
 
-        function copyEmail() {
-            if (!state.email) return;
-            navigator.clipboard.writeText(state.email);
-            alert("Email copied to clipboard!");
+        async function startPolling() {
+            if (pollInterval) clearInterval(pollInterval);
+            pollInterval = setInterval(async () => {
+                if (!state.token) return;
+                const res = await fetch('https://api.mail.tm/messages', { headers: { 'Authorization': `Bearer ${state.token}` } }).then(r => r.json());
+                if (res['hydra:member']) {
+                    state.messages = res['hydra:member'];
+                    renderInbox();
+                }
+            }, 5000);
         }
 
-        initEmail();
+        function copyEmail() {
+            navigator.clipboard.writeText(state.email);
+            showToast('Address copied to clipboard!');
+        }
+
+        // Initialize App
+        window.onload = () => {
+            lucide.createIcons();
+            initEmail();
+        };
     </script>
 </body>
 </html>

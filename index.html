@@ -9,7 +9,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-white dark:bg-slate-900 text-slate-800 font-sans min-h-screen flex flex-col items-center justify-between m-0 p-0 sm:p-4 sm:bg-slate-100 transition-colors duration-200" id="appBody">
+<body class="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen flex flex-col items-center justify-between m-0 p-0 sm:p-4 sm:bg-slate-100 dark:sm:bg-slate-950 transition-colors duration-200" id="appBody">
     <!-- App Container -->
     <div id="root" class="w-full sm:max-w-md flex flex-col flex-grow items-center justify-center"></div>
 
@@ -164,7 +164,7 @@
 
             let messageModal = s.selectedMessage ? `
                 <div class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-                    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
+                    <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                             <h3 class="font-bold text-sm truncate pr-2">${s.selectedMessage.subject || '(No Subject)'}</h3>
                             <button onclick="s.selectedMessage=null;render();" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -173,8 +173,8 @@
                             <p><strong>From:</strong> ${s.selectedMessage.from.name ? s.selectedMessage.from.name + ' &lt;' + s.selectedMessage.from.address + '&gt;' : s.selectedMessage.from.address}</p>
                             <p class="mt-1"><strong>Date:</strong> ${new Date(s.selectedMessage.createdAt).toLocaleString()}</p>
                         </div>
-                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border border-slate-100 dark:border-slate-800 my-2">
-                            ${s.selectedMessage.html ? s.selectedMessage.html[0] : `<p>${s.selectedMessage.text || 'No content.'}</p>`}
+                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 p-4 rounded-xl border border-slate-200 dark:border-slate-700 my-2 whitespace-pre-wrap font-sans">
+                            ${s.selectedMessage.text || 'No content.'}
                         </div>
                         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 text-right">
                             <button onclick="s.selectedMessage=null;render();" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-medium">Close</button>
@@ -185,12 +185,12 @@
 
             let privacyHtml = s.showPrivacy ? `
                 <div class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-                    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
+                    <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                             <h3 class="font-bold text-sm">Privacy Policy</h3>
                             <button onclick="s.showPrivacy=false;render();" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
-                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 text-slate-600 dark:text-slate-300">
+                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 text-slate-700 dark:text-slate-300">
                             <p class="font-bold mb-1">Good Faith & Privacy Commitment</p>
                             <p>Temporary Email is provided in good faith as a privacy tool designed strictly to protect user personal email inboxes from unwanted spam, junk mail, and promotional clutter during simple sign-ups and code verifications.</p>
                             <p class="mt-2 font-bold mb-1">Data Retention</p>
@@ -202,12 +202,12 @@
 
             let termsHtml = s.showTerms ? `
                 <div class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-                    <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
+                    <div class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 w-full max-w-md rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[85vh] flex flex-col">
                         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                             <h3 class="font-bold text-sm">Terms of Service</h3>
                             <button onclick="s.showTerms=false;render();" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
-                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 text-slate-600 dark:text-slate-300">
+                        <div class="py-4 flex-grow overflow-y-auto text-xs space-y-2 text-slate-700 dark:text-slate-300">
                             <p class="font-bold mb-1">Acceptable Use & Good Intent</p>
                             <p>By using Temporary Email, you agree to use this service exclusively for legitimate, temporary testing and sign-up verifications.</p>
                             <p class="mt-2 font-bold mb-1 text-rose-500">Strict Anti-Fraud Policy</p>

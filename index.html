@@ -6,6 +6,11 @@
     <title>Temporary Email</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
@@ -124,9 +129,12 @@
         }
 
         function render() {
-            document.getElementById('appBody').className = s.dark 
-                ? "bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-between m-0 p-0 sm:p-4 sm:bg-slate-950 transition-colors duration-200"
-                : "bg-white text-slate-800 font-sans min-h-screen flex flex-col items-center justify-between m-0 p-0 sm:p-4 sm:bg-slate-100 transition-colors duration-200";
+            // Toggle dark class on root html element for Tailwind
+            if (s.dark) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
 
             const root = document.getElementById('root');
             const mins = Math.floor(s.timeLeft / 60);
@@ -142,8 +150,8 @@
                         <div class="w-12 h-12 rounded-full bg-blue-50 dark:bg-slate-800 text-blue-500 flex items-center justify-center mx-auto mb-3">
                             <i data-lucide="mail" class="w-6 h-6"></i>
                         </div>
-                        <p class="font-medium text-sm">Waiting for incoming mail...</p>
-                        <p class="text-xs opacity-60 mt-1">Emails sent to your temporary address will appear here automatically.</p>
+                        <p class="font-medium text-sm text-slate-700 dark:text-slate-200">Waiting for incoming mail...</p>
+                        <p class="text-xs opacity-60 mt-1 text-slate-500 dark:text-slate-400">Emails sent to your temporary address will appear here automatically.</p>
                     </div>
                 `;
             } else {
@@ -152,10 +160,10 @@
                     inboxContent += `
                         <div onclick="openMessage('${m.id}')" class="py-3 px-2 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-colors">
                             <div class="truncate pr-2">
-                                <p class="text-xs font-bold truncate">${m.from.name || m.from.address}</p>
+                                <p class="text-xs font-bold truncate text-slate-900 dark:text-slate-100">${m.from.name || m.from.address}</p>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 truncate">${m.subject || '(No Subject)'}</p>
                             </div>
-                            <span class="text-[10px] opacity-50 whitespace-nowrap">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            <span class="text-[10px] text-slate-400 whitespace-nowrap">${new Date(m.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                         </div>
                     `;
                 });
@@ -169,7 +177,7 @@
                             <h3 class="font-bold text-sm truncate pr-2">${s.selectedMessage.subject || '(No Subject)'}</h3>
                             <button onclick="s.selectedMessage=null;render();" class="p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
-                        <div class="py-3 text-xs opacity-70 border-b border-slate-100 dark:border-slate-800">
+                        <div class="py-3 text-xs opacity-70 border-b border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300">
                             <p><strong>From:</strong> ${s.selectedMessage.from.name ? s.selectedMessage.from.name + ' &lt;' + s.selectedMessage.from.address + '&gt;' : s.selectedMessage.from.address}</p>
                             <p class="mt-1"><strong>Date:</strong> ${new Date(s.selectedMessage.createdAt).toLocaleString()}</p>
                         </div>
@@ -219,7 +227,7 @@
             ` : '';
 
             root.innerHTML = `
-                <div class="w-full min-h-screen sm:min-h-0 bg-white dark:bg-slate-900 sm:rounded-3xl sm:shadow-xl sm:border border-slate-200/80 dark:border-slate-800 p-4 sm:p-6 flex flex-col flex-grow justify-between">
+                <div class="w-full min-h-screen sm:min-h-0 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 sm:rounded-3xl sm:shadow-xl sm:border border-slate-200/80 dark:border-slate-800 p-4 sm:p-6 flex flex-col flex-grow justify-between">
                     <div>
                         <!-- Header -->
                         <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
@@ -227,7 +235,7 @@
                                 <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
                                     <i data-lucide="mail" class="w-4 h-4"></i>
                                 </div>
-                                <h1 class="font-bold text-base tracking-tight">Temporary Email</h1>
+                                <h1 class="font-bold text-base tracking-tight text-slate-900 dark:text-slate-100">Temporary Email</h1>
                             </div>
                             <button onclick="s.dark=!s.dark;render();" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 transition-transform">
                                 <i data-lucide="${s.dark ? 'sun' : 'moon'}" class="w-4 h-4"></i>

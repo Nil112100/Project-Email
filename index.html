@@ -12,9 +12,9 @@
         <a href="index.html" class="text-xl font-bold text-blue-600">📧 Temporary Email</a>
         <div class="space-x-4">
             <a href="index.html" class="text-sm font-medium text-blue-600">Home</a>
-            <a href="privacy.html" class="text-sm font-medium hover:text-blue-600">Privacy</a>
-            <a href="terms.html" class="text-sm font-medium hover:text-blue-600">Terms</a>
-            <a href="about.html" class="text-sm font-medium hover:text-blue-600">About</a>
+            <a href="privacy.html" data-modal="privacy" class="text-sm font-medium hover:text-blue-600">Privacy</a>
+            <a href="terms.html" data-modal="terms" class="text-sm font-medium hover:text-blue-600">Terms</a>
+            <a href="about.html" data-modal="about" class="text-sm font-medium hover:text-blue-600">About</a>
         </div>
     </nav>
 
@@ -88,6 +88,51 @@
         &copy; 2026 Temporary Email. All rights reserved.
     </footer>
 
+    <!-- Hidden source content for the Privacy/Terms/About popups.
+         Kept as real, visible-to-crawlers HTML (just visually hidden)
+         so this text is still indexable and privacy.html / terms.html /
+         about.html remain the no-JS fallback if someone lands there directly. -->
+    <div class="hidden">
+        <div id="privacyContent">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Privacy Policy</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>Your privacy is our top priority. This tool is designed to protect your primary inbox from spam.</p>
+                <h3 class="text-lg font-semibold text-gray-900">Data Retention</h3>
+                <p>Emails and user accounts are entirely temporary. They are automatically and permanently deleted from our servers once the timer expires. We do not store backups.</p>
+                <h3 class="text-lg font-semibold text-gray-900">Lawful Use</h3>
+                <p>This service is strictly for personal privacy protection. Using our service for illegal activities is prohibited.</p>
+            </div>
+        </div>
+        <div id="termsContent">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Terms of Service</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>By using our temporary email service, you agree to the following conditions:</p>
+                <h3 class="text-lg font-semibold text-gray-900">1. Lawful Use Only</h3>
+                <p>This platform is provided strictly as a privacy tool for legitimate users looking to avoid spam and protect their digital footprint. The generation and use of temporary email addresses for illegal activities, fraud, identity theft, harassment, or malicious actions are strictly prohibited.</p>
+                <h3 class="text-lg font-semibold text-gray-900">2. No Warranties</h3>
+                <p>The service is provided on an "as is" and "as available" basis. We do not guarantee permanent availability or storage of emails.</p>
+            </div>
+        </div>
+        <div id="aboutContent">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">About Our Service</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>Welcome to your trusted digital privacy utility. In an era where online tracking and unwanted spam are ubiquitous, our goal is to give users back control over their personal information.</p>
+                <h3 class="text-lg font-semibold text-gray-900">Our Mission</h3>
+                <p>We built this platform to provide a disposable, temporary email address solution that helps protect your personal identity. It is designed for safe evaluation of new websites, registering for one-time gated content, or avoiding marketing spam from untrustworthy sources.</p>
+                <h3 class="text-lg font-semibold text-gray-900">Committed to Safety</h3>
+                <p>We strongly advocate for lawful digital hygiene. While our tool protects you from data collection, we strictly prohibit its use for any fraudulent or malicious activities.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal overlay -->
+    <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 relative">
+            <button id="modalClose" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
     <script>
     (function () {
         const API = 'https://api.mail.tm';
@@ -107,7 +152,8 @@
         let secondsLeft = SESSION_SECONDS;
         let countdownHandle = null;
         let pollHandle = null;
-        let knownMessageIds = new Set();
+        let currentMessages = [];
+        let viewState = 'list'; // 'list' or 'detail'
 
         function setStatus(text, isError) {
             statusMsg.textContent = text || '';
@@ -175,13 +221,21 @@
                 </div>`;
         }
 
-        function renderMessages(messages) {
-            if (!messages.length) {
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : str;
+            return div.innerHTML;
+        }
+
+        // Renders the inbox list. This is the "home" view of the mailbox card.
+        function renderList() {
+            viewState = 'list';
+            if (!currentMessages.length) {
                 renderEmptyInbox();
                 return;
             }
             messageList.innerHTML = '';
-            messages.forEach((msg) => {
+            currentMessages.forEach((msg) => {
                 const row = document.createElement('div');
                 row.className = 'border border-gray-100 rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition';
                 row.innerHTML = `
@@ -191,40 +245,44 @@
                     </div>
                     <p class="text-sm text-gray-700 truncate">${escapeHtml(msg.subject || '(no subject)')}</p>
                     <p class="text-xs text-gray-400 truncate">${escapeHtml(msg.intro || '')}</p>
-                    <div class="msg-body hidden mt-2 pt-2 border-t border-gray-100 text-sm text-gray-700 whitespace-pre-wrap"></div>
                 `;
-                row.addEventListener('click', () => toggleMessage(row, msg.id));
+                row.addEventListener('click', () => openMessage(msg.id));
                 messageList.appendChild(row);
             });
         }
 
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
+        // Replaces the whole mailbox card with a dedicated full view of one email,
+        // with its own back button, instead of a small inline expand.
+        async function openMessage(id) {
+            viewState = 'detail';
+            messageList.innerHTML = `
+                <div class="flex flex-col h-full flex-grow">
+                    <button id="backToInbox" type="button" class="text-sm text-blue-600 font-medium hover:underline flex items-center gap-1 mb-4 self-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 111.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" /></svg>
+                        Back to Inbox
+                    </button>
+                    <div id="messageDetailBody" class="flex-grow overflow-y-auto text-sm text-gray-500">Loading…</div>
+                </div>`;
+            document.getElementById('backToInbox').addEventListener('click', renderList);
 
-        async function toggleMessage(row, id) {
-            const body = row.querySelector('.msg-body');
-            const isHidden = body.classList.contains('hidden');
-            if (!isHidden) {
-                body.classList.add('hidden');
-                return;
-            }
-            if (!body.dataset.loaded) {
-                body.textContent = 'Loading…';
-                body.classList.remove('hidden');
-                try {
-                    const full = await apiJson(API + '/messages/' + id, {
-                        headers: { Authorization: 'Bearer ' + token }
-                    });
-                    body.textContent = full.text || (full.html && full.html.join('\n')) || full.intro || '(empty message)';
-                    body.dataset.loaded = '1';
-                } catch (err) {
-                    body.textContent = 'Could not load this message.';
-                }
-            } else {
-                body.classList.remove('hidden');
+            const detailBody = document.getElementById('messageDetailBody');
+            try {
+                const full = await apiJson(API + '/messages/' + id, {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                detailBody.innerHTML = `
+                    <h3 class="text-lg font-bold text-gray-900 mb-1 break-words">${escapeHtml(full.subject || '(no subject)')}</h3>
+                    <p class="text-sm text-gray-500 mb-4 break-words">From <span class="font-medium text-gray-700">${escapeHtml((full.from && full.from.address) || 'unknown')}</span> · ${new Date(full.createdAt).toLocaleString()}</p>
+                    <div class="border-t border-gray-100 pt-4 text-sm text-gray-800 whitespace-pre-wrap break-words">${escapeHtml(full.text || (full.html && full.html.join('\n')) || full.intro || '(empty message)')}</div>
+                `;
+                // Best-effort: mark as read, ignore failures
+                apiJson(API + '/messages/' + id, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/merge-patch+json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify({ seen: true })
+                }).catch(() => {});
+            } catch (err) {
+                detailBody.textContent = 'Could not load this message.';
             }
         }
 
@@ -239,7 +297,10 @@
                     headers: { Authorization: 'Bearer ' + token }
                 });
                 const messages = data['hydra:member'] || data.member || (Array.isArray(data) ? data : []);
-                renderMessages(messages);
+                currentMessages = messages;
+                // Don't yank someone back to the list while they're reading a message;
+                // the list just quietly refreshes underneath and shows next time they go back.
+                if (viewState === 'list') renderList();
                 setStatus('Inbox up to date · last checked ' + new Date().toLocaleTimeString());
             } catch (err) {
                 setStatus('Could not check for new emails right now.', true);
@@ -255,6 +316,8 @@
             copyBtn.disabled = true;
             refreshBtn.disabled = true;
             emailBox.textContent = 'Generating address…';
+            currentMessages = [];
+            viewState = 'list';
             renderEmptyInbox();
             setStatus('');
             stopPolling();
@@ -317,6 +380,49 @@
         newAddressBtn.addEventListener('click', generateAddress);
 
         generateAddress();
+
+        // ---- Privacy / Terms / About popups ----
+        // Progressive enhancement: the nav links still point at the real
+        // privacy.html / terms.html / about.html pages, so they keep working
+        // (and stay crawlable) even if JS fails. When JS runs, clicks open a
+        // popup with the same content instead of navigating away.
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalBody = document.getElementById('modalBody');
+        const modalClose = document.getElementById('modalClose');
+
+        function openModal(key) {
+            const source = document.getElementById(key + 'Content');
+            if (!source) return;
+            modalBody.innerHTML = source.innerHTML;
+            modalOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            history.replaceState(null, '', '#' + key);
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            history.replaceState(null, '', location.pathname);
+        }
+
+        document.querySelectorAll('[data-modal]').forEach((link) => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(link.dataset.modal);
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) closeModal();
+        });
+
+        // Deep-link support: temporaryemail.site/#privacy opens the popup directly.
+        const initialHash = location.hash.replace('#', '');
+        if (['privacy', 'terms', 'about'].includes(initialHash)) openModal(initialHash);
     })();
     </script>
 </body>

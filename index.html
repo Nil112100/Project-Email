@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temporary Email & Digital Privacy Guide</title>
+    <title>Temporary Email - Secure & Fast</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="bg-white border-b border-gray-200 shadow-sm px-6 py-4 flex justify-between items-center">
         <a href="index.html" class="text-xl font-bold text-blue-600">📧 Temporary Email</a>
         <div class="space-x-4">
@@ -19,53 +18,69 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="bg-white border-b border-gray-100 py-12 px-6 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Master Your Online Privacy & Security</h1>
-            <p class="text-lg text-gray-600">Your trusted resource for practical guides on avoiding spam, protecting your digital footprint, and browsing safely on the web.</p>
+    <!-- Main tool -->
+    <main class="flex-grow container mx-auto px-4 py-12 max-w-5xl w-full">
+        <div class="grid md:grid-cols-2 gap-6 items-start">
+
+            <!-- Inbox Address Card -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Your Inbox Address</p>
+
+                <div id="emailBox" class="border border-gray-200 rounded-lg px-4 py-3 text-blue-600 font-medium mb-4 break-all bg-gray-50 min-h-[3rem] flex items-center">
+                    Generating address…
+                </div>
+
+                <button id="copyBtn" class="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Copy Address
+                </button>
+
+                <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-100 text-sm text-gray-500">
+                    <span class="flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" /></svg>
+                        <span id="timer">10:00</span>
+                    </span>
+                    <button id="newAddressBtn" class="text-blue-600 font-medium hover:underline">New Address</button>
+                </div>
+
+                <p id="statusMsg" class="text-xs text-gray-400 mt-3"></p>
+            </div>
+
+            <!-- Mailbox Card -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col min-h-[22rem]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-semibold flex items-center gap-2">📨 Mailbox</h2>
+                    <button id="refreshBtn" class="text-sm text-blue-600 font-medium hover:underline disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Check for new emails
+                    </button>
+                </div>
+
+                <div id="messageList" class="flex-grow flex flex-col">
+                    <div class="flex-grow flex flex-col items-center justify-center text-center py-8">
+                        <div class="text-4xl mb-3">✉️</div>
+                        <p class="font-semibold text-gray-900">Your inbox is empty</p>
+                        <p class="text-sm text-gray-500 mt-1 max-w-xs">Waiting for incoming emails. They will automatically appear here once received.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
 
-    <!-- Main Blog Content / Articles -->
-    <main class="flex-grow container mx-auto px-4 py-12 max-w-4xl space-y-8">
-        <h2 class="text-2xl font-bold text-gray-900 border-b pb-2">Latest Guides</h2>
-
-        <!-- Article 1 -->
-        <article class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-3">
-            <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Digital Hygiene</span>
-            <h3 class="text-2xl font-bold text-gray-900">Why You Should Stop Using Your Main Email Everywhere</h3>
-            <p class="text-gray-600 leading-relaxed">
-                Every time you sign up for a one-off newsletter, a Wi-Fi portal, or a free trial using your primary email address, you open the door to unwanted marketing spam and potential data leaks. Learn how separating your digital identities keeps your main inbox clean.
+        <!-- Info section -->
+        <div class="mt-12 space-y-4">
+            <h2 class="text-xl font-bold text-gray-900">Why Use Our Temporary Email Service?</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Our service provides you with a disposable, temporary email address to help protect your personal identity and keep your primary inbox free from spam. It is highly recommended for users who want to safely evaluate new websites, sign up for one-time gated content, or register for services that appear risky, untrustworthy, or prone to selling user data. By using a temporary address, your real identity remains hidden, and your personal inbox remains clean and secure.
             </p>
-            <div class="pt-2">
-                <span class="text-sm text-gray-400">Published on July 31, 2026 • 4 min read</span>
-            </div>
-        </article>
 
-        <!-- Article 2 -->
-        <article class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-3">
-            <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Cybersecurity</span>
-            <h3 class="text-2xl font-bold text-gray-900">How to Spot and Avoid Phishing Scams in 2026</h3>
-            <p class="text-gray-600 leading-relaxed">
-                Phishing attacks have grown increasingly sophisticated with automated scripts and lookalike domains. Discover the core warning signs to look out for before clicking links or entering credentials online.
-            </p>
-            <div class="pt-2">
-                <span class="text-sm text-gray-400">Published on July 30, 2026 • 6 min read</span>
+            <div class="border-l-4 border-red-500 bg-red-50 rounded-r-xl p-6 space-y-3">
+                <h3 class="font-bold text-red-700">Strict Terms of Service &amp; Privacy Policy</h3>
+                <p class="text-sm text-gray-800"><span class="font-semibold">Lawful Use Only:</span> This platform is provided strictly as a privacy tool for legitimate users looking to avoid spam and protect their digital footprint.</p>
+                <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+                    <li><span class="font-semibold">Prohibited Activities:</span> The generation and use of temporary email addresses for illegal activities, fraud, identity theft, harassment, bypassing bans, or malicious actions are explicitly strictly prohibited.</li>
+                    <li><span class="font-semibold">No Guarantees of Permanence:</span> Addresses and emails are temporary and will be permanently deleted after a set period. We do not store backups of your temporary emails.</li>
+                    <li><span class="font-semibold">Compliance:</span> By generating an email on this site, you agree to abide by these terms. We reserve the right to block access or comply with legal authorities if our service is actively abused or utilized in unlawful behavior.</li>
+                </ul>
             </div>
-        </article>
-
-        <!-- Article 3 -->
-        <article class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-3">
-            <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Data Protection</span>
-            <h3 class="text-2xl font-bold text-gray-900">Understanding Your Digital Footprint: What Websites Track</h3>
-            <p class="text-gray-600 leading-relaxed">
-                From tracking pixels to third-party cookies, data brokers collect massive profiles on everyday web traffic. Here is a straightforward breakdown of what data is gathered and how you can limit your exposure.
-            </p>
-            <div class="pt-2">
-                <span class="text-sm text-gray-400">Published on July 25, 2026 • 5 min read</span>
-            </div>
-        </article>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -73,5 +88,236 @@
         &copy; 2026 Temporary Email. All rights reserved.
     </footer>
 
+    <script>
+    (function () {
+        const API = 'https://api.mail.tm';
+        const SESSION_SECONDS = 10 * 60; // 10 minute countdown, matches the on-screen timer
+        const POLL_MS = 12000; // auto-check inbox every 12s
+
+        const emailBox = document.getElementById('emailBox');
+        const copyBtn = document.getElementById('copyBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const newAddressBtn = document.getElementById('newAddressBtn');
+        const timerEl = document.getElementById('timer');
+        const messageList = document.getElementById('messageList');
+        const statusMsg = document.getElementById('statusMsg');
+
+        let token = null;
+        let address = null;
+        let secondsLeft = SESSION_SECONDS;
+        let countdownHandle = null;
+        let pollHandle = null;
+        let knownMessageIds = new Set();
+
+        function setStatus(text, isError) {
+            statusMsg.textContent = text || '';
+            statusMsg.className = 'text-xs mt-3 ' + (isError ? 'text-red-500' : 'text-gray-400');
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60).toString().padStart(2, '0');
+            const sec = Math.floor(s % 60).toString().padStart(2, '0');
+            return m + ':' + sec;
+        }
+
+        function startCountdown() {
+            clearInterval(countdownHandle);
+            secondsLeft = SESSION_SECONDS;
+            timerEl.textContent = formatTime(secondsLeft);
+            countdownHandle = setInterval(() => {
+                secondsLeft -= 1;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownHandle);
+                    timerEl.textContent = 'Expired';
+                    stopPolling();
+                    copyBtn.disabled = true;
+                    refreshBtn.disabled = true;
+                    setStatus('This address expired. Click "New Address" for a fresh one.');
+                } else {
+                    timerEl.textContent = formatTime(secondsLeft);
+                }
+            }, 1000);
+        }
+
+        function stopPolling() {
+            clearInterval(pollHandle);
+            pollHandle = null;
+        }
+
+        function startPolling() {
+            stopPolling();
+            pollHandle = setInterval(checkMessages, POLL_MS);
+        }
+
+        function randomString(len) {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let out = '';
+            for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
+            return out;
+        }
+
+        async function apiJson(url, opts) {
+            const res = await fetch(url, opts);
+            if (!res.ok) {
+                const body = await res.text().catch(() => '');
+                throw new Error('Request to ' + url + ' failed (' + res.status + '): ' + body.slice(0, 200));
+            }
+            if (res.status === 204) return null;
+            return res.json();
+        }
+
+        function renderEmptyInbox() {
+            messageList.innerHTML = `
+                <div class="flex-grow flex flex-col items-center justify-center text-center py-8">
+                    <div class="text-4xl mb-3">✉️</div>
+                    <p class="font-semibold text-gray-900">Your inbox is empty</p>
+                    <p class="text-sm text-gray-500 mt-1 max-w-xs">Waiting for incoming emails. They will automatically appear here once received.</p>
+                </div>`;
+        }
+
+        function renderMessages(messages) {
+            if (!messages.length) {
+                renderEmptyInbox();
+                return;
+            }
+            messageList.innerHTML = '';
+            messages.forEach((msg) => {
+                const row = document.createElement('div');
+                row.className = 'border border-gray-100 rounded-lg p-3 mb-2 cursor-pointer hover:bg-gray-50 transition';
+                row.innerHTML = `
+                    <div class="flex justify-between gap-2">
+                        <p class="font-semibold text-sm text-gray-900 truncate">${escapeHtml((msg.from && msg.from.address) || 'Unknown sender')}</p>
+                        <span class="text-xs text-gray-400 whitespace-nowrap">${new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                    </div>
+                    <p class="text-sm text-gray-700 truncate">${escapeHtml(msg.subject || '(no subject)')}</p>
+                    <p class="text-xs text-gray-400 truncate">${escapeHtml(msg.intro || '')}</p>
+                    <div class="msg-body hidden mt-2 pt-2 border-t border-gray-100 text-sm text-gray-700 whitespace-pre-wrap"></div>
+                `;
+                row.addEventListener('click', () => toggleMessage(row, msg.id));
+                messageList.appendChild(row);
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        async function toggleMessage(row, id) {
+            const body = row.querySelector('.msg-body');
+            const isHidden = body.classList.contains('hidden');
+            if (!isHidden) {
+                body.classList.add('hidden');
+                return;
+            }
+            if (!body.dataset.loaded) {
+                body.textContent = 'Loading…';
+                body.classList.remove('hidden');
+                try {
+                    const full = await apiJson(API + '/messages/' + id, {
+                        headers: { Authorization: 'Bearer ' + token }
+                    });
+                    body.textContent = full.text || (full.html && full.html.join('\n')) || full.intro || '(empty message)';
+                    body.dataset.loaded = '1';
+                } catch (err) {
+                    body.textContent = 'Could not load this message.';
+                }
+            } else {
+                body.classList.remove('hidden');
+            }
+        }
+
+        async function checkMessages(manual) {
+            if (!token) return;
+            if (manual) {
+                refreshBtn.textContent = 'Checking…';
+                refreshBtn.disabled = true;
+            }
+            try {
+                const data = await apiJson(API + '/messages?page=1', {
+                    headers: { Authorization: 'Bearer ' + token }
+                });
+                const messages = data['hydra:member'] || data.member || (Array.isArray(data) ? data : []);
+                renderMessages(messages);
+                setStatus('Inbox up to date · last checked ' + new Date().toLocaleTimeString());
+            } catch (err) {
+                setStatus('Could not check for new emails right now.', true);
+            } finally {
+                if (manual) {
+                    refreshBtn.textContent = 'Check for new emails';
+                    refreshBtn.disabled = secondsLeft <= 0;
+                }
+            }
+        }
+
+        async function generateAddress() {
+            copyBtn.disabled = true;
+            refreshBtn.disabled = true;
+            emailBox.textContent = 'Generating address…';
+            renderEmptyInbox();
+            setStatus('');
+            stopPolling();
+            clearInterval(countdownHandle);
+
+            try {
+                const domainsRes = await apiJson(API + '/domains?page=1');
+                const domains = domainsRes['hydra:member'] || domainsRes.member || [];
+                if (!domains.length) throw new Error('No domains available');
+                const domain = domains[0].domain;
+
+                const username = 'user' + randomString(8);
+                address = username + '@' + domain;
+                const password = randomString(16) + 'A1!';
+
+                await apiJson(API + '/accounts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, password })
+                });
+
+                const tokenRes = await apiJson(API + '/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, password })
+                });
+                token = tokenRes.token;
+
+                emailBox.textContent = address;
+                copyBtn.disabled = false;
+                refreshBtn.disabled = false;
+                startCountdown();
+                startPolling();
+                checkMessages();
+            } catch (err) {
+                emailBox.textContent = 'Could not generate an address.';
+                setStatus('The mail service is unreachable right now. Click "New Address" to retry.', true);
+            }
+        }
+
+        copyBtn.addEventListener('click', async () => {
+            if (!address) return;
+            try {
+                await navigator.clipboard.writeText(address);
+            } catch (e) {
+                // Fallback for browsers without clipboard API access
+                const ta = document.createElement('textarea');
+                ta.value = address;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            const original = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => { copyBtn.textContent = original; }, 1500);
+        });
+
+        refreshBtn.addEventListener('click', () => checkMessages(true));
+        newAddressBtn.addEventListener('click', generateAddress);
+
+        generateAddress();
+    })();
+    </script>
 </body>
 </html>

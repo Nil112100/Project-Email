@@ -1,8 +1,0 @@
-- name: Install Dependencies & Build Tailwind CSS
-        run: |
-          npm install
-          mkdir -p www/assets/css
-          npm run build:css
-          npx cap init "Temporary Email" "com.yourdomain.tempemail" --web-dir www
-          npx cap add android
-          npx cap sync android

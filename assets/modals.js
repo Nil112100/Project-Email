@@ -15,7 +15,9 @@
  * for privacy.html / terms.html / about.html / contact.html.
  *
  * CONTENT below is the single copy of the popup text. Update it here once
- * and every page picks it up — nothing to keep in sync by hand.
+ * and every page picks it up — nothing to keep in sync by hand. Whenever
+ * this changes, mirror the same edit into privacy.html / terms.html /
+ * about.html / contact.html so the real pages and the popups never drift.
  */
 (function () {
     const CONTENT = {
@@ -27,6 +29,10 @@
                 <p>Emails and user accounts are entirely temporary. They are automatically and permanently deleted from our servers once the timer expires. We do not store backups.</p>
                 <h3 class="text-lg font-semibold text-gray-900">Lawful Use</h3>
                 <p>This service is strictly for personal privacy protection. Using our service for illegal activities is prohibited.</p>
+                <h3 class="text-lg font-semibold text-gray-900">Advertising &amp; Cookies</h3>
+                <p>This site uses cookies for advertising and analytics, including cookies served by Google. If you're located in the European Economic Area, the UK, or Switzerland, we ask for your consent before any non-essential cookies are set, via the cookie banner shown when you first visit.</p>
+                <p>We use Google AdSense to display ads. Google, as a third-party vendor, uses cookies (including the DoubleClick cookie) to serve ads based on your prior visits to this site and other sites on the internet.</p>
+                <p>You can opt out of personalized advertising via <a href="https://adssettings.google.com" class="text-blue-600 hover:underline" target="_blank" rel="noopener">Google's Ad Settings</a> or <a href="https://www.aboutads.info/choices" class="text-blue-600 hover:underline" target="_blank" rel="noopener">www.aboutads.info</a>. Learn more at <a href="https://policies.google.com/technologies/partner-sites" class="text-blue-600 hover:underline" target="_blank" rel="noopener">How Google uses information from sites that use our services</a>.</p>
             </div>`,
         terms: `
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Terms of Service</h2>
@@ -55,18 +61,10 @@
             </div>`
     };
 
-    // Reserve scrollbar space on every page, all the time. This is the fix
-    // for the "shake" when a popup opens: opening a modal sets
-    // overflow:hidden on <body>, which removes the scrollbar and narrows
-    // the viewport by ~15-17px, snapping the fixed-width nav/content
-    // sideways. Reserving the gutter up front means removing the scrollbar
-    // never changes the page width, so nothing jumps.
     const gutterFix = document.createElement('style');
     gutterFix.textContent = 'html{scrollbar-gutter:stable;}';
     document.head.appendChild(gutterFix);
 
-    // Build the overlay once per page load. Pages don't need to hand-paste
-    // this markup anymore — that's exactly what let it drift out of sync.
     const overlay = document.createElement('div');
     overlay.id = 'modalOverlay';
     overlay.className = 'hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
@@ -94,10 +92,6 @@
         history.replaceState(null, '', location.pathname);
     }
 
-    // Event delegation on document, not per-link listeners. This means it
-    // doesn't matter which page you're on, how the nav is generated, or
-    // whether new [data-modal] links get added later — every one of them
-    // just works, with zero extra wiring per page.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('[data-modal]');
         if (!link) return;

@@ -1,18 +1,18 @@
 /**
- * Privacy / Terms / About popup system — shared by every page on the site.
+ * Privacy / Terms / About / Contact popup system — shared by every page on the site.
  *
  * Include this on any page with:
  *   <script src="/assets/modals.js" defer></script>   (top-level pages)
  *   <script src="../assets/modals.js" defer></script> (pages one folder deep, e.g. /blog/*)
  *
  * Then mark any link that should open a popup instead of navigating with
- * data-modal="privacy" | "terms" | "about", e.g.:
+ * data-modal="privacy" | "terms" | "about" | "contact", e.g.:
  *   <a href="../privacy.html" data-modal="privacy">Privacy</a>
  *
  * The href still points at the real page, so if this script fails to load,
  * or a search engine follows the link, it lands on a real, crawlable page
  * with the same content — this is progressive enhancement, not a replacement
- * for privacy.html / terms.html / about.html.
+ * for privacy.html / terms.html / about.html / contact.html.
  *
  * CONTENT below is the single copy of the popup text. Update it here once
  * and every page picks it up — nothing to keep in sync by hand.
@@ -45,6 +45,13 @@
                 <p>We built this platform to provide a disposable, temporary email address solution that helps protect your personal identity. It is designed for safe evaluation of new websites, registering for one-time gated content, or avoiding marketing spam from untrustworthy sources.</p>
                 <h3 class="text-lg font-semibold text-gray-900">Committed to Safety</h3>
                 <p>We strongly advocate for lawful digital hygiene. While our tool protects you from data collection, we strictly prohibit its use for any fraudulent or malicious activities.</p>
+            </div>`,
+        contact: `
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Contact Us</h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed text-center">
+                <h3 class="text-lg font-semibold text-gray-900">Get In Touch</h3>
+                <p>For privacy inquiries, support, or general questions, please reach out to us directly via email.</p>
+                <p class="text-lg font-medium text-blue-600">temporaryemailsupport@gmail.com</p>
             </div>`
     };
 

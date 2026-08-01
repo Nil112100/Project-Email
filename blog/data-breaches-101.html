@@ -67,44 +67,5 @@
         &copy; 2026 Temporary Email. All rights reserved.
     </footer>
     <script src="../assets/modals.js" defer></script>
-    <!-- Cookie Consent Banner -->
-<div id="cookie-consent-banner" class="fixed bottom-0 inset-x-0 pb-2 sm:pb-5 z-50 hidden">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div class="p-2 rounded-lg bg-gray-900 shadow-lg sm:p-3">
-            <div class="flex items-center justify-between flex-wrap">
-                <div class="w-0 flex-1 flex items-center">
-                    <p class="ml-3 font-medium text-white truncate">
-                        <span class="md:hidden">We use cookies for ads and analytics.</span>
-                        <span class="hidden md:inline">We use cookies to improve your experience and serve personalized Google AdSense ads. By continuing, you agree to our <a href="privacy.html" class="underline text-blue-300 hover:text-blue-100">Privacy Policy</a>.</span>
-                    </p>
-                </div>
-                <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                    <button id="accept-cookies-btn" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-100 focus:outline-none">
-                        Accept & Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const banner = document.getElementById('cookie-consent-banner');
-        const acceptBtn = document.getElementById('accept-cookies-btn');
-
-        // Show banner if cookies haven't been accepted yet
-        if (!localStorage.getItem('cookiesAccepted')) {
-            banner.classList.remove('hidden');
-        }
-
-        // Hide banner and save preference when clicked
-        acceptBtn.addEventListener('click', function() {
-            localStorage.setItem('cookiesAccepted', 'true');
-            banner.classList.add('hidden');
-        });
-    });
-</script>
-<!-- End Cookie Consent Banner -->
 </body>
 </html>

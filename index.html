@@ -108,51 +108,6 @@
         &copy; 2026 Temporary Email. All rights reserved.
     </footer>
 
-    <!-- Hidden source content for the Privacy/Terms/About popups.
-         Kept as real, visible-to-crawlers HTML (just visually hidden)
-         so this text is still indexable and privacy.html / terms.html /
-         about.html remain the no-JS fallback if someone lands there directly. -->
-    <div class="hidden">
-        <div id="privacyContent">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Privacy Policy</h2>
-            <div class="space-y-4 text-gray-700 leading-relaxed">
-                <p>Your privacy is our top priority. This tool is designed to protect your primary inbox from spam.</p>
-                <h3 class="text-lg font-semibold text-gray-900">Data Retention</h3>
-                <p>Emails and user accounts are entirely temporary. They are automatically and permanently deleted from our servers once the timer expires. We do not store backups.</p>
-                <h3 class="text-lg font-semibold text-gray-900">Lawful Use</h3>
-                <p>This service is strictly for personal privacy protection. Using our service for illegal activities is prohibited.</p>
-            </div>
-        </div>
-        <div id="termsContent">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Terms of Service</h2>
-            <div class="space-y-4 text-gray-700 leading-relaxed">
-                <p>By using our temporary email service, you agree to the following conditions:</p>
-                <h3 class="text-lg font-semibold text-gray-900">1. Lawful Use Only</h3>
-                <p>This platform is provided strictly as a privacy tool for legitimate users looking to avoid spam and protect their digital footprint. The generation and use of temporary email addresses for illegal activities, fraud, identity theft, harassment, or malicious actions are strictly prohibited.</p>
-                <h3 class="text-lg font-semibold text-gray-900">2. No Warranties</h3>
-                <p>The service is provided on an "as is" and "as available" basis. We do not guarantee permanent availability or storage of emails.</p>
-            </div>
-        </div>
-        <div id="aboutContent">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">About Our Service</h2>
-            <div class="space-y-4 text-gray-700 leading-relaxed">
-                <p>Welcome to your trusted digital privacy utility. In an era where online tracking and unwanted spam are ubiquitous, our goal is to give users back control over their personal information.</p>
-                <h3 class="text-lg font-semibold text-gray-900">Our Mission</h3>
-                <p>We built this platform to provide a disposable, temporary email address solution that helps protect your personal identity. It is designed for safe evaluation of new websites, registering for one-time gated content, or avoiding marketing spam from untrustworthy sources.</p>
-                <h3 class="text-lg font-semibold text-gray-900">Committed to Safety</h3>
-                <p>We strongly advocate for lawful digital hygiene. While our tool protects you from data collection, we strictly prohibit its use for any fraudulent or malicious activities.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal overlay -->
-    <div id="modalOverlay" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-lg max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 relative">
-            <button id="modalClose" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl leading-none">✕</button>
-            <div id="modalBody"></div>
-        </div>
-    </div>
-
     <script>
     (function () {
         const API = 'https://api.mail.tm';
@@ -400,50 +355,8 @@
         newAddressBtn.addEventListener('click', generateAddress);
 
         generateAddress();
-
-        // ---- Privacy / Terms / About popups ----
-        // Progressive enhancement: the nav links still point at the real
-        // privacy.html / terms.html / about.html pages, so they keep working
-        // (and stay crawlable) even if JS fails. When JS runs, clicks open a
-        // popup with the same content instead of navigating away.
-        const modalOverlay = document.getElementById('modalOverlay');
-        const modalBody = document.getElementById('modalBody');
-        const modalClose = document.getElementById('modalClose');
-
-        function openModal(key) {
-            const source = document.getElementById(key + 'Content');
-            if (!source) return;
-            modalBody.innerHTML = source.innerHTML;
-            modalOverlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-            history.replaceState(null, '', '#' + key);
-        }
-
-        function closeModal() {
-            modalOverlay.classList.add('hidden');
-            document.body.style.overflow = '';
-            history.replaceState(null, '', location.pathname);
-        }
-
-        document.querySelectorAll('[data-modal]').forEach((link) => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                openModal(link.dataset.modal);
-            });
-        });
-
-        modalClose.addEventListener('click', closeModal);
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) closeModal();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !modalOverlay.classList.contains('hidden')) closeModal();
-        });
-
-        // Deep-link support: temporaryemail.site/#privacy opens the popup directly.
-        const initialHash = location.hash.replace('#', '');
-        if (['privacy', 'terms', 'about'].includes(initialHash)) openModal(initialHash);
     })();
     </script>
+    <script src="assets/modals.js" defer></script>
 </body>
 </html>

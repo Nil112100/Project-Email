@@ -8,17 +8,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-
     <!-- Navigation -->
     <nav class="bg-white border-b border-gray-200 shadow-sm px-6 py-4 flex justify-between items-center">
-        <a href="index.html" class="text-xl font-bold text-blue-600">📧 TempMail</a>
+        <a href="index.html" class="text-xl font-bold text-blue-600">📧 Temporary Email</a>
         <div class="space-x-4">
             <a href="index.html" class="text-sm font-medium hover:text-blue-600">Home</a>
-            <a href="privacy.html" class="text-sm font-medium text-blue-600">Privacy</a>
-            <a href="contact.html" class="text-sm font-medium hover:text-blue-600">Contact</a>
+            <a href="blog/index.html" class="text-sm font-medium hover:text-blue-600">Blog</a>
+            <a href="privacy.html" data-modal="privacy" class="text-sm font-medium text-blue-600">Privacy</a>
+            <a href="terms.html" data-modal="terms" class="text-sm font-medium hover:text-blue-600">Terms</a>
+            <a href="about.html" data-modal="about" class="text-sm font-medium hover:text-blue-600">About</a>
+            <a href="contact.html" data-modal="contact" class="text-sm font-medium hover:text-blue-600">Contact</a>
         </div>
     </nav>
-
     <!-- Content -->
     <main class="flex-grow container mx-auto px-4 py-12 max-w-3xl">
         <h1 class="text-3xl font-bold mb-6">Privacy Policy</h1>
@@ -28,9 +29,13 @@
             <p>Emails and user accounts are entirely temporary. They are automatically and permanently deleted from our servers once the timer expires. We do not store backups.</p>
             <h2 class="text-xl font-semibold mt-6">Lawful Use</h2>
             <p>This service is strictly for personal privacy protection. Using our service for illegal activities is prohibited.</p>
+            <h2 class="text-xl font-semibold mt-6">Advertising &amp; Cookies</h2>
+            <p>This site uses cookies for advertising and analytics, including cookies served by Google. If you're located in the European Economic Area, the UK, or Switzerland, we ask for your consent before any non-essential cookies are set, via the cookie banner shown when you first visit.</p>
+            <p>We use Google AdSense to display ads. Google, as a third-party vendor, uses cookies (including the DoubleClick cookie) to serve ads based on your prior visits to this site and other sites on the internet. Google's use of advertising cookies enables it and its partners to serve ads based on your visits to this site and/or other sites.</p>
+            <p>You can opt out of personalized advertising by visiting <a href="https://adssettings.google.com" class="text-blue-600 hover:underline" target="_blank" rel="noopener">Google's Ad Settings</a>. You can also opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices" class="text-blue-600 hover:underline" target="_blank" rel="noopener">www.aboutads.info</a>.</p>
+            <p>For more detail on how Google uses information from sites that use its services, see <a href="https://policies.google.com/technologies/partner-sites" class="text-blue-600 hover:underline" target="_blank" rel="noopener">How Google uses information from sites or apps that use our services</a>.</p>
         </div>
     </main>
-
     <!-- Footer -->
     <footer class="bg-white border-t border-gray-200 py-6 text-center text-sm text-gray-500">
         &copy; 2026 Temporary Email. All rights reserved.
@@ -55,17 +60,14 @@
         </div>
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const banner = document.getElementById('cookie-consent-banner');
         const acceptBtn = document.getElementById('accept-cookies-btn');
-
         // Show banner if cookies haven't been accepted yet
         if (!localStorage.getItem('cookiesAccepted')) {
             banner.classList.remove('hidden');
         }
-
         // Hide banner and save preference when clicked
         acceptBtn.addEventListener('click', function() {
             localStorage.setItem('cookiesAccepted', 'true');
@@ -74,5 +76,6 @@
     });
 </script>
 <!-- End Cookie Consent Banner -->
+    <script src="assets/modals.js" defer></script>
 </body>
 </html>

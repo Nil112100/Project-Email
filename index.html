@@ -4,7 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temporary Email - Secure & Fast</title>
+    <meta name="description" content="Generate a free, disposable temporary email address instantly. No signup required. Protect your real inbox from spam, phishing, and data breaches.">
+    <link rel="canonical" href="https://temporaryemail.site/">
     <link rel="icon" type="image/png" href="favicon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Temporary Email">
+    <meta property="og:title" content="Temporary Email - Secure & Fast">
+    <meta property="og:description" content="Generate a free, disposable temporary email address instantly. No signup required. Protect your real inbox from spam, phishing, and data breaches.">
+    <meta property="og:url" content="https://temporaryemail.site/">
+    <meta property="og:image" content="https://temporaryemail.site/favicon.png">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Temporary Email - Secure & Fast">
+    <meta name="twitter:description" content="Generate a free, disposable temporary email address instantly. No signup required.">
+    <meta name="twitter:image" content="https://temporaryemail.site/favicon.png">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Temporary Email",
+        "url": "https://temporaryemail.site/",
+        "description": "Generate a free, disposable temporary email address instantly. No signup required. Protect your real inbox from spam, phishing, and data breaches."
+    }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
@@ -360,44 +385,5 @@
     })();
     </script>
     <script src="assets/modals.js" defer></script>
-    <!-- Cookie Consent Banner -->
-<div id="cookie-consent-banner" class="fixed bottom-0 inset-x-0 pb-2 sm:pb-5 z-50 hidden">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div class="p-2 rounded-lg bg-gray-900 shadow-lg sm:p-3">
-            <div class="flex items-center justify-between flex-wrap">
-                <div class="w-0 flex-1 flex items-center">
-                    <p class="ml-3 font-medium text-white truncate">
-                        <span class="md:hidden">We use cookies for ads and analytics.</span>
-                        <span class="hidden md:inline">We use cookies to improve your experience and serve personalized Google AdSense ads. By continuing, you agree to our <a href="privacy.html" class="underline text-blue-300 hover:text-blue-100">Privacy Policy</a>.</span>
-                    </p>
-                </div>
-                <div class="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
-                    <button id="accept-cookies-btn" class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-100 focus:outline-none">
-                        Accept & Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const banner = document.getElementById('cookie-consent-banner');
-        const acceptBtn = document.getElementById('accept-cookies-btn');
-
-        // Show banner if cookies haven't been accepted yet
-        if (!localStorage.getItem('cookiesAccepted')) {
-            banner.classList.remove('hidden');
-        }
-
-        // Hide banner and save preference when clicked
-        acceptBtn.addEventListener('click', function() {
-            localStorage.setItem('cookiesAccepted', 'true');
-            banner.classList.add('hidden');
-        });
-    });
-</script>
-<!-- End Cookie Consent Banner -->
 </body>
 </html>
